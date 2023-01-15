@@ -1,0 +1,105 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: black;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.note-div {
+  width: 350px;
+  text-align: center;
+}
+
+.note-text {
+  color: rgba(127, 255, 212, 0.781);
+}
+
+.whatisname-div {
+  text-align: center;
+}
+
+.whatisname-text {
+  color: royalblue;
+}
+
+.XorO-div {
+  text-align: center;
+}
+
+.XorOChoose-h1 {
+  margin-block-end: 0;
+}
+
+.XorO-h1 {
+  margin-block-start: 0;
+}
+
+.X {
+  background-color: red;
+}
+
+.O {
+  background-color: blue;
+}
+
+.X,
+.O {
+  padding: 0px 7px 2px 7px;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.X:hover {
+  background-color: rgba(255, 0, 0, 0.445);
+}
+
+.O:hover {
+  background-color: rgba(0, 0, 255, 0.411);
+}
+
+.chosen-mark {
+  text-align: center;
+}
+
+.username-input-btn {
+  cursor: pointer;
+}
+
+.gameboard {
+  width: 225px;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 100px;
+}
+
+.gameboard-square {
+  box-sizing: border-box;
+  width: 75px;
+  height: 75px;
+  background-color: lightblue;
+  border: 2px solid blue;
+  text-align: center;
+  font-size: 3rem;
+  color: black;
+}
+
+.restart-game-div {
+  text-align: center;
+}
+
+.draw {
+  text-align: center;
+}
