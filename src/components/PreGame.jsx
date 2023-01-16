@@ -6,12 +6,12 @@ import ChosenMark from "./ChosenMark";
 import { AppContext } from "../appStateAndFunctions";
 
 const PreGame = () => {
-  const { userMark } = useContext(AppContext);
+  const { user } = useContext(AppContext);
   return (
     <>
       <Note />
       <WhatIsName />
-      {!userMark ? <XorO /> : <ChosenMark />}
+      {!user.mark ? <XorO /> : <ChosenMark />}
     </>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useRef } from "react";
 import { AppContext } from "../appStateAndFunctions";
 
 const Gameboard = () => {
@@ -6,18 +6,20 @@ const Gameboard = () => {
     checkForWin,
     setGameStatus,
     placeMark,
-    AIMark,
+    AI,
     openSquares,
-    userMark,
+    user,
     whoseTurn,
     checkForDraw,
-    randomIndex,
-    gameStatus,
-    activeBoard,
   } = useContext(AppContext);
   const gameboardSquares = Array(9).fill(0);
 
-  useEffect(() => {
+  const firstUpdate = useRef(true);
+  useLayoutEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
     if (checkForWin()) {
       setGameStatus("won");
     }
@@ -25,32 +27,30 @@ const Gameboard = () => {
       setGameStatus("draw");
     }
     if (whoseTurn === "AI") {
+      let randomIndex = Math.floor(Math.random() * openSquares.length);
       setTimeout(() => {
         if (document.querySelector(".gameboard")) {
           document.getElementById(openSquares[randomIndex]).textContent =
-            AIMark;
+            AI.mark;
         }
-        placeMark(AIMark, openSquares[randomIndex] - 1);
+        placeMark(AI, openSquares[randomIndex] - 1);
       }, 2000);
     }
   }, [
-    AIMark,
+    AI,
     checkForDraw,
     checkForWin,
     openSquares,
     placeMark,
     setGameStatus,
     whoseTurn,
-    randomIndex,
-    gameStatus,
-    activeBoard,
   ]);
 
   const MakeMoveDOM = (e) => {
     if (!e.target.textContent && whoseTurn === "User") {
-      document.getElementById(e.target.id).textContent = userMark;
-      placeMark(userMark, e.target.id - 1);
+      document.getElementById(e.target.id).textContent = user.mark;
     }
+    placeMark(user, e.target.id - 1);
   };
 
   return (

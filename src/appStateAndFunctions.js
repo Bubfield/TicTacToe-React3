@@ -3,8 +3,8 @@ import { createContext, useState } from "react";
 export const useAppState = () => {
   const [openSquares, setOpenSquares] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   const [userName, setUserName] = useState("");
-  const [userMark, setUserMark] = useState(null);
-  const [AIMark, setAIMark] = useState(null);
+  const [user, setUser] = useState({ player: "User", mark: null });
+  const [AI, setAI] = useState({ player: "AI", mark: null });
   const [gameStatus, setGameStatus] = useState("new");
   const [whoseTurn, setWhoseTurn] = useState(null);
   const [whoWon, setWhoWon] = useState(null);
@@ -28,13 +28,11 @@ export const useAppState = () => {
     }
   };
 
-  let randomIndex = Math.floor(Math.random() * openSquares.length);
-
   const handleRestart = () => {
     setOpenSquares([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     setUserName("");
-    setUserMark(null);
-    setAIMark(null);
+    setUser({ player: "User", mark: null });
+    setAI({ player: "AI", mark: null });
     setGameStatus("new");
     setWhoseTurn(null);
     setWhoWon(null);
@@ -42,19 +40,36 @@ export const useAppState = () => {
   };
 
   const handleMarks = (mark) => {
-    setUserMark(mark);
-    setAIMark(mark === "X" ? "O" : "X");
+    setUser({ ...user, mark: mark });
+    setAI({ ...AI, mark: mark === "X" ? "O" : "X" });
     whoGoesFirst(mark);
   };
 
+  const updateActiveBoard = (whichPlayer, whichSquare) => {
+    let updatedBoard = [...activeBoard];
+    updatedBoard[whichSquare] = whichPlayer;
+    setActiveBoard(updatedBoard);
+  };
+
+  const updateOpenSquares = (whichSquare) => {
+    setOpenSquares((squares) =>
+      squares.filter((squareID) => squareID !== whichSquare + 1)
+    );
+  };
+
+  const isAnOpenSquare = (whichSquare) => {
+    return openSquares.indexOf(whichSquare + 1) !== -1;
+  };
+
+  const itIsPlayersTurn = (player) => {
+    return player === whoseTurn;
+  };
+
   const placeMark = (whichPlayer, whichSquare) => {
-    if (openSquares.indexOf(whichSquare + 1) !== -1) {
-      let updatedBoard = [...activeBoard];
-      updatedBoard[whichSquare] = whichPlayer;
-      setActiveBoard(updatedBoard);
-      setOpenSquares((squares) =>
-        squares.filter((squareID) => squareID !== whichSquare + 1)
-      );
+    const { player, mark } = whichPlayer;
+    if (isAnOpenSquare(whichSquare) && itIsPlayersTurn(player)) {
+      updateActiveBoard(mark, whichSquare);
+      updateOpenSquares(whichSquare);
       triggerNextTurn();
     } else {
       return;
@@ -70,18 +85,28 @@ export const useAppState = () => {
   };
 
   const setWinner = (mark) => {
-    if (mark === userMark) {
+    if (mark === user.mark) {
       setWhoWon(userName);
     } else {
       setWhoWon("The Computer");
     }
   };
 
+  const allSquaresAreOccupied = (one, two, three) => {
+    return one && two && three;
+  };
+
+  const allSquaresAreEqual = (one, two, three) => {
+    return one === two && one === three;
+  };
+
   const checkRow = (num1, num2, num3) => {
-    let arr = [...activeBoard];
-    if (arr[num1] && arr[num2] && arr[num3]) {
-      if (arr[num1] === arr[num2] && arr[num1] === arr[num3]) {
-        setWinner(arr[num1]);
+    let one = activeBoard[num1];
+    let two = activeBoard[num2];
+    let three = activeBoard[num3];
+    if (allSquaresAreOccupied(one, two, three)) {
+      if (allSquaresAreEqual(one, two, three)) {
+        setWinner(one);
         return true;
       }
     }
@@ -114,10 +139,10 @@ export const useAppState = () => {
   return {
     userName,
     setUserName,
-    userMark,
-    setUserMark,
-    AIMark,
-    setAIMark,
+    user,
+    setUser,
+    AI,
+    setAI,
     gameStatus,
     setGameStatus,
     whoseTurn,
@@ -133,7 +158,6 @@ export const useAppState = () => {
     checkForDraw,
     handleRestart,
     whoGoesFirst,
-    randomIndex,
   };
 };
 
